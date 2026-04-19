@@ -82,20 +82,52 @@
         }
 
         async function loginEmail() {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const { error } = await _supabase.auth.signInWithPassword({ email, password });
-            if (error) alert(error.message);
-            else window.location.href = 'index.html';
-        }
+    const emailInput = document.getElementById('email').value.trim();
+    const passwordInput = document.getElementById('password').value.trim();
 
-        async function signUpEmail() {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const { error } = await _supabase.auth.signUp({ email, password });
-            if (error) alert(error.message);
-            else alert("Silakan cek email atau langsung login jika verifikasi dimatikan.");
-        }
+    if (!emailInput || !passwordInput) {
+        alert("Ops! Email dan Password harus diisi.");
+        return;
+    }
+
+    const { data, error } = await _supabase.auth.signInWithPassword({
+        email: emailInput,
+        password: passwordInput
+    });
+
+    if (error) {
+        alert("Gagal Login: " + error.message);
+    } else {
+        window.location.href = 'index.html';
+    }
+}
+
+async function signUpEmail() {
+    const emailInput = document.getElementById('email').value.trim();
+    const passwordInput = document.getElementById('password').value.trim();
+
+    if (!emailInput || !passwordInput) {
+        alert("Isi dulu email dan passwordnya ya!");
+        return;
+    }
+
+    if (passwordInput.length < 6) {
+        alert("Keamanan utama! Password minimal 6 karakter.");
+        return;
+    }
+
+    const { data, error } = await _supabase.auth.signUp({
+        email: emailInput,
+        password: passwordInput
+    });
+
+    if (error) {
+        alert("Gagal Daftar: " + error.message);
+    } else {
+        alert("Pendaftaran berhasil! Silakan coba login sekarang.");
+    }
+}
+
 
         function loginSpecial() {
             const user = document.getElementById('adminUser').value;
